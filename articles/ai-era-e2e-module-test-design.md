@@ -1,5 +1,5 @@
 ---
-title: "どうテストするかを先に考え、システムを設計する"
+title: "「E2Eテストを厚くする」は正解か？ テストから逆算するモジュール設計"
 emoji: "🧪"
 type: "tech"
 topics: ["testing", "e2e", "architecture", "ai", "typescript"]
