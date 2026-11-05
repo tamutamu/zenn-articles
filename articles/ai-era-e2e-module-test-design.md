@@ -3,7 +3,7 @@ title: "AI時代のテスト設計：E2Eと非E2Eを分ける、テスト可能�
 emoji: "🧪"
 type: "tech"
 topics: ["testing", "e2e", "architecture", "ai", "typescript"]
-published: true
+published: false
 ---
 
 ## 1. 問題提起：AIが作ったテストを、どう確かめるか
