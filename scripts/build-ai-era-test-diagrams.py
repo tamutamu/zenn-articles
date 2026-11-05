@@ -50,82 +50,54 @@ def save(im,name):
     im.save(OUT/name,optimize=True)
     print(str(OUT/name),im.size)
 
-# 1) Hero concept: same validation needs, different architecture outcomes.
-# The thesis is testability designed BEFORE implementation, not a fixed E2E/Unit ratio.
-im,d=canvas(1800,1510)
-txt(d,(70,40),"CONCEPT  /  テスト設計からアーキテクチャを考える",30,TEAL,True)
-txt(d,(70,120),"「どうテストするか」で、設計は変わる",69,INK,True)
-txt(d,(72,220),"検証方法を実装前に決めると、必要なモジュール境界が見えてきます。",34,SUB)
+# 1) The article's ONE core concept: compare when test design is considered.
+# Keep concrete E2E/unit examples in the later diagrams, not this opening concept.
+im,d=canvas(1800,1280)
+txt(d,(72,38),"CONCEPT  /  テスト可能なシステムをどう設計するか",30,TEAL,True)
+txt(d,(72,105),"テストを考える順序で、設計の進め方が変わる",61,INK,True)
+txt(d,(75,206),"同じシステムでも「いつテスト方法を考えるか」によって、手戻りを防げる場合があります。",31,SUB)
 
-# Input: shared, required verification for a task management system
-rect(d,(76,294,1724,574),WHITE,LINE,22,3)
-center(d,900,337,"システムには、次のような検証が必要",40,INK,True)
-rect(d,(116,399,848,535),BLUE_L,"#A0B6EB",15,3)
-center(d,482,443,"操作・連携をE2Eで確認",33,BLUE,True)
-center(d,482,494,"タスク編集 → 保存 → 画面への反映",28,INK)
-rect(d,(950,399,1683,535),TEAL_L,"#8ECBBE",15,3)
-center(d,1316,443,"大量の条件を直接確認",33,TEAL,True)
-center(d,1316,494,"権限 × 操作 × 状態 × 担当者（54ケース）",28,INK)
+# Two distinct approaches side-by-side, with the same number of stages.
+panels=[
+    (70,859,LINE,WHITE,"テストの検討を後回しにすると",SUB),
+    (942,1730,TEAL,WHITE,"実装前にテストを考えると",TEAL),
+]
+for x0,x1,border,background,heading,hcolor in panels:
+    rect(d,(x0,294,x1,1089),background,border,23,4)
+    rect(d,(x0+23,318,x1-23,402),GRAY_L if x0==70 else TEAL_L,GRAY_L if x0==70 else TEAL_L,12,2)
+    center(d,(x0+x1)//2,359,heading,39,hcolor,True)
 
-# Contrast what changes in architecture when testing is considered before implementation
-down(d,900,574,618,TEAL,6)
-rect(d,(519,628,1281,697),INK,INK,16)
-center(d,900,663,"この検証を、実装前の設計に反映したか？",37,WHITE,True)
+left_steps=[
+    ("①  システムを設計・実装","モジュール構造を決めて作り始める"),
+    ("②  テストケースを検討","必要な組み合わせ・期待結果を洗い出す"),
+    ("③  テストしづらい箇所に気付く","直接テストしたい処理が他と密結合"),
+]
+right_steps=[
+    ("①  必要なテストを設計","システム全体の検証方法と期待結果"),
+    ("②  テスト可能な構造を設計","責務・入出力・モジュール境界を決める"),
+    ("③  システムを実装","必要なテストを実行できる構造で開発"),
+]
+for x0,x1,steps,color,fill,border in [
+    (112,816,left_steps,INK,GRAY_L,"#D4DEE8"),
+    (984,1687,right_steps,TEAL,TEAL_L,"#9CCFC3"),
+]:
+    cx=(x0+x1)//2
+    for i,(heading,desc) in enumerate(steps):
+        y=450+i*183
+        rect(d,(x0,y,x1,y+139),fill,border,16,2)
+        center(d,cx,y+42,heading,36,color,True)
+        center(d,cx,y+100,desc,27,INK if i!=2 else SUB)
+        if i<2:down(d,cx,y+140,y+181,SUB if x0==112 else TEAL,5)
 
-# Comparison panels, no conflation of testing phase and design phase
-rect(d,(75,740,866,1361),WHITE,LINE,23,3)
-rect(d,(935,740,1725,1361),WHITE,TEAL,23,4)
-rect(d,(108,770,833,843),GRAY_L,GRAY_L,12)
-rect(d,(967,770,1692,843),TEAL_L,TEAL_L,12)
-center(d,470,806,"A  実装後にテストを検討",36,SUB,True)
-center(d,1329,806,"B  実装前にテストを設計",36,TEAL,True)
+# Outcome of each approach
+rect(d,(112,1004,816,1068),"#FFF2E8","#E9BCA9",15,2)
+center(d,464,1035,"必要なら、後から構造を見直す",30,RED,True)
+rect(d,(984,1004,1687,1068),TEAL_L,"#80C5B7",15,2)
+center(d,1335,1035,"最初からテスト可能な構造で進める",30,TEAL,True)
 
-center(d,470,883,"権限判定がRepositoryに依存",31,INK,True)
-center(d,1329,883,"権限判定を独立させる",31,INK,True)
-
-# A: Service contains the decision logic and database dependency
-rect(d,(300,928,745,1130),GRAY_L,LINE,17,3)
-center(d,522,967,"TaskService",34,INK,True)
-line(d,[(325,999),(722,999)],LINE,2)
-center(d,522,1046,"権限判定",32,INK,True)
-center(d,522,1092,"Repositoryアクセス",27,SUB)
-rect(d,(107,980,272,1075),BLUE_L,"#A6BCEB",13,2)
-center(d,189,1027,"E2E",31,BLUE,True)
-right(d,275,1027,295,BLUE,3)
-rect(d,(106,1167,342,1255),"#FFF4DD","#E3BC80",13,3)
-center(d,224,1206,"54ケース",31,AMBER,True)
-center(d,224,1240,"直接検証",24,SUB)
-line(d,[(345,1208),(522,1208),(522,1134)],AMBER,4)
-d.polygon([(511,1152),(533,1152),(522,1132)],fill=AMBER)
-rect(d,(370,1166,747,1255),"#FFF4DD","#E3BC80",13,3)
-center(d,558,1196,"模擬Repositoryが必要",28,INK,True)
-center(d,558,1232,"ケースごとにデータを準備",25,SUB)
-center(d,471,1310,"後から構造の見直しが発生する場合も",27,RED)
-
-# B: integration path is preserved, direct scripted access to a policy is possible
-rect(d,(972,942,1126,1027),BLUE_L,"#A6BCEB",12,2)
-center(d,1049,984,"画面",30,BLUE,True)
-rect(d,(1214,942,1434,1027),GRAY_L,LINE,12,2)
-center(d,1324,983,"TaskService",29,INK,True)
-rect(d,(1527,942,1692,1027),GRAY_L,LINE,12,2)
-center(d,1609,983,"DB",29,INK,True)
-right(d,1130,983,1208,BLUE,4)
-right(d,1437,983,1520,BLUE,4)
-txt(d,(985,900),"E2E：操作のつながりを確認",25,BLUE,True)
-
-rect(d,(979,1133,1207,1230),TEAL_L,"#84CDBE",12,3)
-center(d,1093,1171,"54ケース",31,TEAL,True)
-center(d,1093,1208,"直接検証",25,SUB)
-rect(d,(1385,1122,1691,1248),TEAL_L,TEAL,14,4)
-center(d,1538,1166,"PermissionPolicy",30,TEAL,True)
-center(d,1538,1211,"判定専用・副作用なし",25,INK)
-right(d,1211,1184,1379,TEAL,5)
-line(d,[(1324,1031),(1324,1090),(1538,1090),(1538,1118)],TEAL,4)
-d.polygon([(1528,1106),(1548,1106),(1538,1122)],fill=TEAL)
-center(d,1329,1310,"必要な判定だけを独立して検証できる",27,TEAL,True)
-
-rect(d,(75,1401,1725,1480),INK,INK,17)
-center(d,900,1441,"先にテストを考え、テスト可能な構造を設計してから実装する",43,WHITE,True)
+rect(d,(70,1131,1730,1248),INK,INK,20)
+center(d,900,1170,"テストケースは、実装後の確認だけでなく",34,WHITE,True)
+center(d,900,1214,"実装前の設計材料にもなる",41,WHITE,True)
 save(im,"hero.png")
 
 # 2) Flowchart, DESIGN PHASE ONLY. Selection is driven by required tests.
