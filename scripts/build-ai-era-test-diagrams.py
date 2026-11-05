@@ -50,40 +50,45 @@ def save(im,name):
     im.save(OUT/name,optimize=True)
     print(str(OUT/name),im.size)
 
-# 1) Core proposal: start from required quality, not a test-level quota.
-im,d=canvas(1800,1180)
-txt(d,(75,43),"THE IDEA  /  先に必要な検証を定義する",29,TEAL,True)
-txt(d,(75,112),"テストの量ではなく、必要な品質から考える",60,INK,True)
-txt(d,(78,208),"テスト方法は結論です。実装前のテスト設計がモジュール構造を決めます。",35,SUB)
+# 1) The core idea, illustrated with one concrete case.
+# One row = E2E for user-visible behavior; another = direct tests for many rules.
+# Both are decided BEFORE implementation; only the needed module gets separated.
+im,d=canvas(1800,1120)
+txt(d,(72,45),"THE IDEA  /  実装前にテストを設計する",29,TEAL,True)
+txt(d,(72,120),"どうテストするかで、モジュール設計が変わる",59,INK,True)
+txt(d,(75,213),"タスク管理の例：必要なテストから、実装する構造を決める",34,SUB)
 
-rect(d,(75,300,762,1025),WHITE,LINE,24,3)
-rect(d,(815,300,1725,1025),WHITE,TEAL,24,5)
-center(d,419,347,"テスト方法から始める",39,SUB,True)
-center(d,1270,347,"必要な検証から始める",39,TEAL,True)
+xs=[(70,552),(660,1142),(1250,1732)]
+centers=[311,901,1491]
+headers=["① 何を確認する？","② どうテストする？","③ どう設計する？"]
+for i,(x0,x1) in enumerate(xs):
+    rect(d,(x0,316,x1,385),GRAY_L,GRAY_L,14)
+    center(d,centers[i],351,headers[i],33,INK,True)
 
-for i,(label,desc) in enumerate([
-    ("① 手段を先に決める","E2Eを厚くする／ユニットを増やす"),
-    ("② 後から条件を洗い出す","重要な観点や組み合わせに気付く"),
-    ("③ 実装後に構造を調整","直接テストしづらい処理を修正"),
-]):
-    y=421+i*181
-    rect(d,(108,y,733,y+136),GRAY_L,"#CCD6DF",15,2)
-    txt(d,(136,y+15),label,33,INK,True)
-    txt(d,(136,y+76),desc,25,SUB)
-    if i<2:down(d,420,y+139,y+178,SUB,4)
+blue_cells=[
+    ("タスクの編集操作","画面と保存結果を確認"),
+    ("E2Eテスト","画面からDBまで確認"),
+    ("操作・連携を設計","画面・API・DBのつながり"),
+]
+teal_cells=[
+    ("権限判定の組み合わせ","多くの条件と期待結果"),
+    ("スクリプトで直接テスト","判定を繰り返し検証"),
+    ("PermissionPolicy","判定処理を独立させる"),
+]
+for i,(x0,x1) in enumerate(xs):
+    rect(d,(x0,424,x1,664),BLUE_L,"#A2B9EC",20,3)
+    center(d,centers[i],504,blue_cells[i][0],34,BLUE,True)
+    center(d,centers[i],574,blue_cells[i][1],27,INK)
+    rect(d,(x0,716,x1,956),TEAL_L,"#89CDBF",20,3)
+    center(d,centers[i],796,teal_cells[i][0],32,TEAL,True)
+    center(d,centers[i],865,teal_cells[i][1],28,INK)
 
-for i,(label,desc) in enumerate([
-    ("① 必要な品質を定義","ユーザーの期待・業務ルール・リスク"),
-    ("② 検証ケースを洗い出す","操作・条件の組み合わせ・期待結果"),
-    ("③ 手法を配分し、境界を設計","E2E／ユニット／その他の検証"),
-]):
-    y=421+i*181
-    rect(d,(851,y,1685,y+136),TEAL_L,"#95CBC0",15,2)
-    txt(d,(878,y+15),label,36,TEAL,True)
-    txt(d,(878,y+78),desc,28,INK)
-    if i<2:down(d,1270,y+139,y+178,TEAL,4)
-rect(d,(75,1055,1725,1150),INK,INK,19)
-center(d,900,1100,"テストケースから必要なモジュール境界を導出し、設計段階で品質を作り込む",38,WHITE,True)
+for y,col in [(544,BLUE),(836,TEAL)]:
+    right(d,555,y,647,col,6)
+    right(d,1145,y,1237,col,6)
+
+rect(d,(70,1000,1732,1093),INK,INK,18)
+center(d,901,1048,"先にテストを考えると、分離すべきモジュールが見えてくる",40,WHITE,True)
 save(im,"hero.png")
 
 # 2) Flowchart, DESIGN PHASE ONLY. Selection is driven by required tests.
