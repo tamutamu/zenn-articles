@@ -50,45 +50,77 @@ def save(im,name):
     im.save(OUT/name,optimize=True)
     print(str(OUT/name),im.size)
 
-# 1) The core idea, illustrated with one concrete case.
-# One row = E2E for user-visible behavior; another = direct tests for many rules.
-# Both are decided BEFORE implementation; only the needed module gets separated.
-im,d=canvas(1800,1120)
-txt(d,(72,45),"THE IDEA  /  実装前にテストを設計する",29,TEAL,True)
-txt(d,(72,120),"どうテストするかで、モジュール設計が変わる",59,INK,True)
-txt(d,(75,213),"タスク管理の例：必要なテストから、実装する構造を決める",34,SUB)
+# 1) Main concept: a system-level test plan determines module boundaries
+# BEFORE implementation. Concrete E2E and rule-combination lanes both survive.
+im,d=canvas(1800,1570)
+txt(d,(76,42),"CONCEPT  /  実装前に、システム全体の検証を考える",29,TEAL,True)
+txt(d,(76,113),"テストの設計が、モジュールの設計を変える",61,INK,True)
+txt(d,(79,209),"「E2Eを増やす」ではなく「必要なテストを成立させる構造を先に決める」",33,SUB)
 
-xs=[(70,552),(660,1142),(1250,1732)]
-centers=[311,901,1491]
-headers=["① 何を確認する？","② どうテストする？","③ どう設計する？"]
-for i,(x0,x1) in enumerate(xs):
-    rect(d,(x0,316,x1,385),GRAY_L,GRAY_L,14)
-    center(d,centers[i],351,headers[i],33,INK,True)
+# ① Start from system-wide test cases (one shared input)
+rect(d,(125,304,1675,470),WHITE,LINE,22,4)
+center(d,900,343,"① システム全体で必要なテストケースを設計",38,BLUE,True)
+center(d,900,409,"画面操作・業務ルール・期待結果・条件の組み合わせを洗い出す",34,INK,True)
 
-blue_cells=[
-    ("タスクの編集操作","画面と保存結果を確認"),
-    ("E2Eテスト","画面からDBまで確認"),
-    ("操作・連携を設計","画面・API・DBのつながり"),
-]
-teal_cells=[
-    ("権限判定の組み合わせ","多くの条件と期待結果"),
-    ("スクリプトで直接テスト","判定を繰り返し検証"),
-    ("PermissionPolicy","判定処理を独立させる"),
-]
-for i,(x0,x1) in enumerate(xs):
-    rect(d,(x0,424,x1,664),BLUE_L,"#A2B9EC",20,3)
-    center(d,centers[i],504,blue_cells[i][0],34,BLUE,True)
-    center(d,centers[i],574,blue_cells[i][1],27,INK)
-    rect(d,(x0,716,x1,956),TEAL_L,"#89CDBF",20,3)
-    center(d,centers[i],796,teal_cells[i][0],32,TEAL,True)
-    center(d,centers[i],865,teal_cells[i][1],28,INK)
+# Branch into two examples; allocation depends on feasibility.
+down(d,900,471,518,BLUE,5)
+line(d,[(452,515),(1348,515)],LINE,5)
+down(d,452,515,552,BLUE,5)
+down(d,1348,515,552,TEAL,5)
 
-for y,col in [(544,BLUE),(836,TEAL)]:
-    right(d,555,y,647,col,6)
-    right(d,1145,y,1237,col,6)
+# ② Where and how to test - two meaningful, explicit sample cases
+rect(d,(85,564,858,1056),BLUE_L,"#A0B9ED",23,4)
+rect(d,(942,564,1715,1056),TEAL_L,"#85CCBF",23,4)
+center(d,471,611,"②-A  操作を通して確認",38,BLUE,True)
+center(d,1328,611,"②-B  大量の条件を確認",38,TEAL,True)
 
-rect(d,(70,1000,1732,1093),INK,INK,18)
-center(d,901,1048,"先にテストを考えると、分離すべきモジュールが見えてくる",40,WHITE,True)
+center(d,471,679,"タスクの編集・保存",36,INK,True)
+center(d,471,725,"操作性・結果表示・DB反映",27,SUB)
+rect(d,(139,775,806,854),BLUE,BLUE,14)
+center(d,471,816,"E2E  /  画面から検証",35,WHITE,True)
+for i,(label,x0,x1) in enumerate([
+    ("画面",154,320),("API",389,556),("DB",625,792),
+]):
+    rect(d,(x0,898,x1,980),WHITE,"#B3C6E9",12,2)
+    center(d,(x0+x1)/2,939,label,31,INK,True)
+right(d,322,939,384,BLUE,4)
+right(d,558,939,621,BLUE,4)
+
+center(d,1328,679,"権限・状態・担当者の組み合わせ",31,INK,True)
+center(d,1328,725,"入力条件 × 期待結果（54ケースなど）",27,SUB)
+rect(d,(996,775,1661,854),TEAL,TEAL,14)
+center(d,1328,816,"スクリプト  /  直接検証",35,WHITE,True)
+rect(d,(990,890,1250,981),WHITE,"#A3D7CD",12,2)
+center(d,1120,924,"入力条件",29,INK,True)
+center(d,1120,959,"Role × State",21,SUB)
+rect(d,(1393,890,1660,981),WHITE,"#A3D7CD",12,2)
+center(d,1526,924,"許可・拒否",29,INK,True)
+center(d,1526,959,"期待結果",21,SUB)
+right(d,1252,940,1386,TEAL,5)
+
+# ③ Translate allocation to the actual architecture *before* implementation.
+down(d,471,1057,1122,BLUE,5)
+down(d,1328,1057,1122,TEAL,5)
+rect(d,(84,1135,1716,1453),WHITE,LINE,23,4)
+center(d,900,1181,"③ 実装前に、テスト可能なモジュール構造を設計",39,INK,True)
+# Architecture: service orchestrates UI, repository and separable business rule
+for x0,x1,y0,y1,fill,edge,h1,h2,c in [
+    (132,427,1245,1360,BLUE_L,"#AAC0EA","画面 / API","E2Eで一連を検証",BLUE),
+    (553,935,1245,1360,GRAY_L,LINE,"TaskService","操作・連携を担当",INK),
+    (1072,1599,1233,1309,GRAY_L,LINE,"TaskRepository","データ操作を担当",INK),
+    (1072,1599,1332,1415,TEAL_L,"#84CDBE","PermissionPolicy","判定だけを直接テスト",TEAL),
+]:
+    rect(d,(x0,y0,x1,y1),fill,edge,16,3)
+    center(d,(x0+x1)/2,y0+33,h1,30,c,True)
+    center(d,(x0+x1)/2,y0+80 if y1-y0>=110 else y0+54,h2,24,SUB)
+right(d,429,1301,548,BLUE,5)
+line(d,[(938,1274),(1014,1274),(1014,1271),(1065,1271)],INK,5)
+d.polygon([(1053,1260),(1053,1282),(1071,1271)],fill=INK)
+line(d,[(938,1313),(1014,1313),(1014,1374),(1065,1374)],TEAL,5)
+d.polygon([(1053,1363),(1053,1385),(1071,1374)],fill=TEAL)
+
+rect(d,(84,1473,1716,1540),INK,INK,17)
+center(d,900,1507,"検証方法を決めてから設計する。だから、必要なモジュール境界が見える。",37,WHITE,True)
 save(im,"hero.png")
 
 # 2) Flowchart, DESIGN PHASE ONLY. Selection is driven by required tests.
