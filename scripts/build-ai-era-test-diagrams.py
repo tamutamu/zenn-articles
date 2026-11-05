@@ -50,92 +50,92 @@ def save(im,name):
     im.save(OUT/name,optimize=True)
     print(str(OUT/name),im.size)
 
-# 1) Why the order matters: design for testability BEFORE implementation.
-im,d=canvas(1800,1170)
-txt(d,(72,48),"THE IDEA  /  テスト可能性を設計に組み込む",29,TEAL,True)
-txt(d,(72,110),"実装前のテストケース設計が、モジュールの境界を決める",56,INK,True)
-txt(d,(75,204),"E2Eかユニットかを先に決めつけず、組み合わせと実行負荷を見て判断します。",34,SUB)
+# 1) Core proposal: start from required quality, not a test-level quota.
+im,d=canvas(1800,1180)
+txt(d,(75,43),"THE IDEA  /  先に必要な検証を定義する",29,TEAL,True)
+txt(d,(75,112),"テストの量ではなく、必要な品質から考える",60,INK,True)
+txt(d,(78,208),"テスト方法は結論です。実装前のテスト設計がモジュール構造を決めます。",35,SUB)
 
-rect(d,(75,296,787,998),WHITE,LINE,23,3)
-rect(d,(824,296,1725,998),WHITE,TEAL,23,5)
-center(d,430,341,"実装してから考えると",38,SUB,True)
-center(d,1269,341,"実装前に考えておけば",38,TEAL,True)
-
-for i,(label,desc) in enumerate([
-    ("① 先に実装する","判定とDB操作を一緒に書く"),
-    ("② 大量のケースに気付く","スクリプトから直接テストしたい"),
-    ("③ 構造を見直す","密結合な処理を分離し直す")
-]):
-    y=411+i*174
-    rect(d,(115,y,745,y+130),GRAY_L,"#D1D9E2",14,2)
-    txt(d,(146,y+15),label,34,INK,True)
-    txt(d,(146,y+72),desc,27,SUB)
-    if i<2: down(d,430,y+132,y+170,SUB,4)
-rect(d,(115,940,745,983),RED_L,RED,12,2)
-center(d,430,961,"テストのために手戻りが発生",25,RED,True)
+rect(d,(75,300,762,1025),WHITE,LINE,24,3)
+rect(d,(815,300,1725,1025),WHITE,TEAL,24,5)
+center(d,419,347,"テスト方法から始める",39,SUB,True)
+center(d,1270,347,"必要な検証から始める",39,TEAL,True)
 
 for i,(label,desc) in enumerate([
-    ("① テストケースを洗い出す","因子・水準・組み合わせ・期待結果"),
-    ("② 実行可能性を見積もる","E2Eで回せるか / 直接検証が必要か"),
-    ("③ テスト可能な構造を設計","必要な処理を副作用なし・疎結合に")
+    ("① 手段を先に決める","E2Eを厚くする／ユニットを増やす"),
+    ("② 後から条件を洗い出す","重要な観点や組み合わせに気付く"),
+    ("③ 実装後に構造を調整","直接テストしづらい処理を修正"),
 ]):
-    y=411+i*174
-    rect(d,(860,y,1685,y+130),TEAL_L,"#A0D4C8",14,2)
-    txt(d,(890,y+15),label,34,TEAL,True)
-    txt(d,(890,y+72),desc,28,INK)
-    if i<2: down(d,1272,y+132,y+170,TEAL,4)
-rect(d,(860,940,1685,983),TEAL_L,TEAL,12,2)
-center(d,1272,961,"テスト可能な構造のまま実装に進める",25,TEAL,True)
+    y=421+i*181
+    rect(d,(108,y,733,y+136),GRAY_L,"#CCD6DF",15,2)
+    txt(d,(136,y+15),label,33,INK,True)
+    txt(d,(136,y+76),desc,25,SUB)
+    if i<2:down(d,420,y+139,y+178,SUB,4)
 
-rect(d,(75,1041,1725,1138),INK,INK,18)
-center(d,900,1089,"テストケースを先に決めることが、開発段階の品質の作り込みにつながる。",39,WHITE,True)
+for i,(label,desc) in enumerate([
+    ("① 必要な品質を定義","ユーザーの期待・業務ルール・リスク"),
+    ("② 検証ケースを洗い出す","操作・条件の組み合わせ・期待結果"),
+    ("③ 手法を配分し、境界を設計","E2E／ユニット／その他の検証"),
+]):
+    y=421+i*181
+    rect(d,(851,y,1685,y+136),TEAL_L,"#95CBC0",15,2)
+    txt(d,(878,y+15),label,36,TEAL,True)
+    txt(d,(878,y+78),desc,28,INK)
+    if i<2:down(d,1270,y+139,y+178,TEAL,4)
+rect(d,(75,1055,1725,1150),INK,INK,19)
+center(d,900,1100,"テストケースから必要なモジュール境界を導出し、設計段階で品質を作り込む",38,WHITE,True)
 save(im,"hero.png")
 
-# 2) Pre-implementation DESIGN ONLY: no test execution steps appear in this flow.
-im,d=canvas(1800,1710)
-txt(d,(80,45),"DESIGN FLOW  /  実装前に決めること",30,TEAL,True)
-txt(d,(80,110),"テストケースの配分から、モジュール設計まで",61,INK,True)
-txt(d,(80,206),"この図は設計工程です。テストの実装や実行は、この後に行います。",34,SUB)
+# 2) Flowchart, DESIGN PHASE ONLY. Selection is driven by required tests.
+im,d=canvas(1800,1700)
+txt(d,(80,52),"DESIGN FLOW  /  実装前に決める",29,TEAL,True)
+txt(d,(80,115),"必要な検証から、テスト可能な設計へ",64,INK,True)
+txt(d,(80,210),"E2E・ユニット・その他を目的と負荷で選び、必要な境界だけを設計します。",33,SUB)
+rect(d,(355,305,1445,435),WHITE,LINE,19)
+center(d,900,348,"STEP 1  /  必要な品質とリスク",29,BLUE,True)
+center(d,900,401,"受入条件・操作・非機能・重要なリスクを整理",34,INK,True)
+down(d,900,436,487,BLUE)
 
-rect(d,(360,304,1440,426),WHITE,LINE,19)
-center(d,900,345,"STEP 1  /  テストケース設計",29,BLUE,True)
-center(d,900,394,"ユーザー操作・UX・受入条件と期待結果を整理",34,INK,True)
-down(d,900,428,477,BLUE)
-rect(d,(360,489,1440,615),WHITE,LINE,19)
-center(d,900,528,"STEP 2  /  因子と組み合わせを洗い出す",29,BLUE,True)
-center(d,900,581,"条件数・想定実行時間・データ準備の負荷を見積もる",32,INK,True)
-down(d,900,617,677,BLUE)
+rect(d,(355,497,1445,627),WHITE,LINE,19)
+center(d,900,538,"STEP 2  /  テストケースと期待結果",29,BLUE,True)
+center(d,900,594,"条件・組み合わせ・境界値・確認方法を洗い出す",33,INK,True)
+down(d,900,629,680,BLUE)
 
-d.polygon([(900,681),(1240,808),(900,935),(560,808)],fill=BLUE_L)
-line(d,[(900,681),(1240,808),(900,935),(560,808),(900,681)],BLUE,5)
-center(d,900,778,"E2Eで現実的に",37,BLUE,True)
-center(d,900,828,"実行できる？",37,BLUE,True)
-line(d,[(560,808),(438,808),(438,980)],BLUE,5)
-down(d,438,977,1002,BLUE)
-center(d,388,771,"YES",30,BLUE,True)
-line(d,[(1240,808),(1360,808),(1360,980)],AMBER,5)
-down(d,1360,977,1002,AMBER)
-center(d,1408,771,"NO",30,AMBER,True)
+rect(d,(275,692,1525,938),BLUE_L,"#98B2E5",19,3)
+center(d,900,741,"STEP 3  /  テスト方法と実行負荷を比較",33,BLUE,True)
+for i,(kind,desc) in enumerate([
+    ("E2E","操作・連携の確認"),
+    ("ユニット","大量の条件判定"),
+    ("その他","性能・UX・安全性"),
+]):
+    x=315+i*405
+    rect(d,(x,801,x+380,903),WHITE,"#B6C7DF",14,2)
+    center(d,x+190,829,kind,30,INK,True)
+    center(d,x+190,879,desc,24,SUB)
+down(d,900,939,996,BLUE)
 
-rect(d,(90,1014,790,1221),BLUE_L,"#A6B7E8",21)
-center(d,440,1057,"E2Eのテストケースを確定",36,BLUE,True)
-center(d,440,1123,"画面操作・UX・API・DB連携",29,INK,True)
-center(d,440,1179,"対象ケースと期待結果を設計",29,SUB)
-rect(d,(1008,1014,1710,1221),"#FFF3D7","#E2B968",21)
-center(d,1359,1057,"非E2Eの対象ケースを確定",35,AMBER,True)
-center(d,1359,1123,"大量パターンの組み合わせ",30,INK,True)
-center(d,1359,1179,"直接入力するケースと期待結果を設計",27,SUB)
-down(d,1359,1223,1270,AMBER)
+d.polygon([(900,1010),(1260,1119),(900,1228),(540,1119)],fill=TEAL_L)
+line(d,[(900,1010),(1260,1119),(900,1228),(540,1119),(900,1010)],TEAL,5)
+center(d,900,1091,"直接テスト用の",34,TEAL,True)
+center(d,900,1139,"独立モジュールが必要？",32,TEAL,True)
 
-rect(d,(1008,1282,1710,1469),TEAL_L,"#8DC9BE",21)
-center(d,1359,1330,"STEP 3  /  テスト可能なモジュール設計",29,TEAL,True)
-center(d,1359,1388,"副作用なし・疎結合の境界を定義",31,INK,True)
-center(d,1359,1433,"入力・出力・責務を決定",27,SUB)
-line(d,[(440,1222),(440,1584),(890,1584)],BLUE,5)
-line(d,[(1359,1471),(1359,1551),(890,1551)],TEAL,5)
-down(d,890,1551,1584,TEAL)
-rect(d,(320,1600,1720,1681),INK,INK,18)
-center(d,1020,1641,"設計完了：E2E・非E2Eのケース配分とモジュール構造が確定",33,WHITE,True)
+line(d,[(540,1119),(415,1119),(415,1273)],BLUE,5)
+down(d,415,1270,1296,BLUE)
+center(d,378,1081,"NO",27,BLUE,True)
+line(d,[(1260,1119),(1387,1119),(1387,1273)],TEAL,5)
+down(d,1387,1270,1296,TEAL)
+center(d,1420,1081,"YES",27,TEAL,True)
+rect(d,(93,1308,765,1480),BLUE_L,"#9BAFE0",19)
+center(d,430,1360,"既存の構造で検証",36,BLUE,True)
+center(d,430,1422,"追加の分離は不要",30,INK)
+rect(d,(1040,1308,1715,1480),TEAL_L,"#87C5BA",19)
+center(d,1377,1360,"モジュール境界を設計",36,TEAL,True)
+center(d,1377,1422,"責務・入出力・依存を決める",27,INK)
+line(d,[(430,1482),(430,1572),(903,1572)],BLUE,5)
+line(d,[(1377,1482),(1377,1545),(903,1545)],TEAL,5)
+down(d,903,1545,1575,TEAL)
+rect(d,(330,1595,1715,1676),INK,INK,18)
+center(d,1022,1635,"設計完了：必要なテストと実装構造が決まった状態",36,WHITE,True)
 save(im,"workflow.png")
 
 # 3) Case map: every cell corresponds to 1 exact combination.
