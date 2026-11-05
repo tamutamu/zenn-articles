@@ -82,15 +82,22 @@ export type Input = {
 }
 
 export function canOperate(x: Input): boolean {
+  if (!['admin', 'member', 'viewer'].includes(x.role)) return false
+  if (!['todo', 'doing', 'done'].includes(x.status)) return false
+
   if (x.action === 'view') return true
+  if (x.action === 'edit')
+    return x.status !== 'done' &&
+      (x.role === 'admin' || (x.role === 'member' && x.isAssignee === true))
   if (x.action === 'delete')
     return x.role === 'admin' && x.status === 'todo'
-  return x.status !== 'done' &&
-    (x.role === 'admin' || (x.role === 'member' && x.isAssignee))
+  return false
 }
 ```
 
-これなら、仕様から作った期待結果と、関数の戻り値を直接照合できます。
+未定義の操作や権限は拒否するようにし、ロールや担当者情報は認証済みのサーバー側データから渡します。TypeScriptの型だけでは実行時の入力値を保証できません。
+
+この関数なら、仕様から作った期待結果と戻り値を直接照合できます。
 
 ```ts
 import assert from 'node:assert/strict'
@@ -109,10 +116,10 @@ for (const { expected, ...input } of testCases) {
 | 比較項目 | 案A：サービス内で判定 | 案B：判定を独立 |
 |---|---:|---:|
 | 合格した判定ケース | 54 | 54 |
-| 模擬DBのデータ設定 | 54回 | 0回 |
-| 模擬DBの読取 | 54回 | 0回 |
+| 模擬Repositoryのデータ設定 | 54回 | 0回 |
+| 模擬Repositoryの呼び出し | 54回 | 0回 |
 
-この結果が示すのは、**案Bでは判定テストにDB代替を用意しなくてよい**という構造上の違いです。実際のE2E実行時間や開発工数の短縮を証明するものではありません。
+表は通常の54ケースについての比較です。**案Bでは判定テストにRepositoryの代替を用意しなくてよい**という構造上の違いを示しています。実際のE2E実行時間や開発工数の短縮を証明するものではありません。
 
 比較に使った[テストコード](https://github.com/tamutamu/zenn-articles/blob/main/examples/ai-era-e2e-module-test-design/design-comparison.test.mjs)と[54ケースの期待結果](https://github.com/tamutamu/zenn-articles/blob/main/examples/ai-era-e2e-module-test-design/test-cases.mjs)も確認できます。
 
@@ -128,6 +135,6 @@ node --experimental-strip-types --test examples/ai-era-e2e-module-test-design/*.
 
 一方、直接テストしたい大量の条件が見つかれば、それが**責務の分離や入出力の設計を検討する根拠**になります。
 
-考え方自体はテスト容易性を意識した設計の延長ですが、ポイントは**実装前にテストケースからその必要性を見つけること**です。
+[TDD](https://martinfowler.com/bliki/TestDrivenDevelopment.html)など、考え方自体は既存のテスト容易性を意識した設計の延長ですが、ポイントは**実装前にテストケースからその必要性を見つけること**です。 仕様が変われば、テストケースと設計も見直します。
 
 テストケースを、完成したコードの確認表で終わらせない。設計段階から品質を作り込むための材料として使っていきたいと考えています。
