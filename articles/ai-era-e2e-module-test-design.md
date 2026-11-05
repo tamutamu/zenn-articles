@@ -1,5 +1,5 @@
 ---
-title: "「E2Eテストを厚くする」は正解か？ テストから逆算するモジュール設計"
+title: "E2Eテストはどこまで必要？ テストケースから考えるモジュール設計"
 emoji: "🧪"
 type: "tech"
 topics: ["testing", "e2e", "architecture", "ai", "typescript"]
