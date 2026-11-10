@@ -1,5 +1,5 @@
 ---
-title: "AIの説明は、なぜ心に残らないのか？ 上岡龍太郎の説明術をスキルにした"
+title: "AIの説明は、なぜ心に残らないのか？ 論理構成スキル「Plainwise」を作った"
 emoji: "🎙️"
 type: "tech"
 topics: ["ai", "llm", "agents", "prompt"]
@@ -10,7 +10,7 @@ AIに質問すると、正しい答えが返ってくることがあります。
 
 私はその違いが、言葉の難しさではなく、**納得に至るまでの話の組み立て方**にあると考えました。
 
-そこで、上岡龍太郎氏の説明術から着想を得て、論理の運び方を再利用できるスキル **[Kamioka Logical Explainer](https://github.com/tamutamu/kamioka-logical-explainer)** にしました。
+そこで、上岡龍太郎氏の説明術から着想を得て、論理の運び方を再利用できるスキル **[Plainwise](https://github.com/tamutamu/plainwise)** にしました。
 
 ## 1. スキルなし・ありで、説明はどう変わるか
 
@@ -93,10 +93,10 @@ AIに質問すると、正しい答えが返ってくることがあります。
 
 スキルはGitHubで公開しています。
 
-**[Kamioka Logical Explainer](https://github.com/tamutamu/kamioka-logical-explainer)**
+**[Plainwise](https://github.com/tamutamu/plainwise)**
 
 ```bash
-npx skills add tamutamu/kamioka-logical-explainer
+npx skills add tamutamu/plainwise
 ```
 
 ※上岡龍太郎氏の説明技法から着想を得た非公式プロジェクトであり、ご本人・関係者による監修・承認を受けたものではありません。
