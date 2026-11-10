@@ -1,5 +1,5 @@
 ---
-title: "AIに「答え」だけでなく「納得できる説明」をさせたい——Plainwiseを作った"
+title: "上岡龍太郎の説明術から着想を得た——AIに「納得できる説明」をさせるPlainwise"
 emoji: "🎙️"
 type: "idea"
 topics: ["ai", "llm", "agents", "prompt"]
