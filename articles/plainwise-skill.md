@@ -79,7 +79,7 @@ Plainwiseでは、次の5段階を基本にします。
 
 一方、**5段階や逆説を毎回強制すると短答には不向き**です。そこでスキルを改訂し、IT用語では正確な定義と適用範囲、短答では簡潔さを優先しました。
 
-[9題材の検証記録](https://github.com/tamutamu/plainwise/blob/main/EVALUATION.md)も公開しています。ただし自己点検であり、**通常のAIより理解度が上がると実証したものではありません**。
+[同条件での比較検証](https://github.com/tamutamu/plainwise/blob/main/EVALUATION.md)では、**通常回答より明確に優れる効果は確認できませんでした**。
 
 ---
 
